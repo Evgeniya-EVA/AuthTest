@@ -1,19 +1,13 @@
-import com.codeborne.selenide.Selenide;
 import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.common.mapper.TypeRef;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
-import io.restassured.mapper.ObjectMapper;
 import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.hamcrest.Matchers;
+import org.apache.log4j.BasicConfigurator;
+import org.junit.jupiter.api.*;
 
-import static com.codeborne.selenide.Selenide.open;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasValue;
 
 public class AuthTest {
     private static RequestSpecification requestSpec = new RequestSpecBuilder()
@@ -27,30 +21,23 @@ public class AuthTest {
 
     @BeforeAll
     static void setUpAll() {
+        BasicConfigurator.configure();
         // сам запрос
         user = new UserData();
         given() // "дано"
                 .spec(requestSpec) // указываем, какую спецификацию используем
-                .body("newUser", (ObjectMapper) user) // передаём в теле объект, который будет преобразован в JSON
+                .body(user) // передаём в теле объект, который будет преобразован в JSON
                 .when() // "когда"
                 .post("/api/system/users") // на какой путь, относительно BaseUri отправляем запрос
                 .then() // "тогда ожидаем"
                 .statusCode(200); // код 200 OK
     }
 
-    @BeforeEach
-    static void setUp() {
-        open("http://Localhost:9999");
-    }
-
-    @AfterEach
-    static void tearDown(){
-        Selenide.close();
-    }
-
     @Test
-    static void isUserExists() {
-        UserData newUse = given().when().get("/newUser").as(new TypeRef<UserData>);
+    void isUserExists() {
+        given(requestSpec).when().get("/api/system/users").then().assertThat().body("users.login", hasValue(user.getLogin()));
+//        UserData newUser = given().when().get("/api/system/users").then().extract().as(UserData.class);
+//        Assertions.assertEquals(user, newUser);
     }
 
 

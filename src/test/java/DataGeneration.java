@@ -16,10 +16,8 @@ public class DataGeneration {
         return faker.internet().password();
     }
 
-    public static String getRandomStatus() {
-        Random random = new Random();
-        int statusIndex = random.nextInt(2);
-        if (statusIndex == 0) {
+    public static String setStatus(UserStatus status) {
+        if (status.equals(UserStatus.ACTIVE)) {
             return UserStatus.ACTIVE.toString();
         } else return UserStatus.BLOCKED.toString();
     }
