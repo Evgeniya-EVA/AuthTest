@@ -5,8 +5,7 @@ import lombok.Setter;
 @EqualsAndHashCode (exclude = "status")
 public class UserData {
     @Getter private String login;
-    @Getter @Setter
-    private String password;
+    @Getter @Setter private String password;
     @Getter private String status;
 
     public UserData(){

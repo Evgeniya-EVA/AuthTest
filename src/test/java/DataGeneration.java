@@ -17,8 +17,6 @@ public class DataGeneration {
     }
 
     public static String setStatus(UserStatus status) {
-        if (status.equals(UserStatus.ACTIVE)) {
-            return UserStatus.ACTIVE.toString();
-        } else return UserStatus.BLOCKED.toString();
+        return status.toString();
     }
 }
